@@ -152,12 +152,14 @@ public class Panel extends JPanel {
 	}
 
 	/**
-	 * Updates the interface components to reflect completion.
+	 * Updates the interface components to reflect completion and prepares for closing.
 	 */
 	private void onComplete() {
 		setStatus("Update complete");
 		progressBar.setValue(progressBar.getMaximum());
-		cancel.setEnabled(false);
+		cancel.removeActionListener(onCancel);
+		cancel.addActionListener(this::onDone);
+		cancel.setText("Exit");
 	}
 
 	/**
@@ -169,10 +171,20 @@ public class Panel extends JPanel {
 	}
 
 	/**
-	 * Cancels the sync operation.
+	 * Cancels the sync operation and prepares for closing.
 	 */
 	private void onCancel(final ActionEvent e) {
 		setStatus("Cancelling..");
 		manager.cancel();
+		cancel.removeActionListener(onCancel);
+		cancel.addActionListener(this::onDone);
+		cancel.setText("Exit");
+	}
+	
+	/**
+	 * Exits.
+	 */
+	private void onDone(final ActionEvent e) {
+		System.exit(0);
 	}
 }
